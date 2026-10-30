@@ -1,5 +1,6 @@
 #ifndef KEEPER_H
 #define KEEPER_H
+#include <string>
 #include "Animal.h"
 class Keeper {
 private:

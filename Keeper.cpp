@@ -5,15 +5,36 @@
 #include <fstream>
 #include <iomanip>
 #include <stdexcept>
+#include <utility>
+#include <utility>
 
 Keeper::Keeper():animals_(nullptr),size_(0),capacity_(0){std::cout<<"[Keeper] vyzvan konstruktor bez parametrov\n";}
 Keeper::Keeper(const Keeper& o):animals_(nullptr),size_(0),capacity_(0){
     std::cout<<"[Keeper] vyzvan konstruktor kopirovaniya\n";
-    for(int i=0;i<o.size_;++i)add(o.animals_[i]->clone());
+    try{
+        for(int i=0;i<o.size_;++i){
+            Animal* copy=o.animals_[i]->clone();
+            try{
+                add(copy);
+            }catch(...){
+                delete copy;
+                throw;
+            }
+        }
+    }catch(...){
+        clear();
+        throw;
+    }
 }
 Keeper& Keeper::operator=(const Keeper& o){
-    if(this!=&o){clear();for(int i=0;i<o.size_;++i)add(o.animals_[i]->clone());}
-    std::cout<<"[Keeper] vyzvan operator prisvaivaniya\n";return *this;
+    if(this!=&o){
+        Keeper temp(o);
+        std::swap(animals_,temp.animals_);
+        std::swap(size_,temp.size_);
+        std::swap(capacity_,temp.capacity_);
+    }
+    std::cout<<"[Keeper] vyzvan operator prisvaivaniya\n";
+    return *this;
 }
 Keeper::~Keeper(){std::cout<<"[Keeper] vyzvan destruktor\n";clear();}
 void Keeper::clear(){for(int i=0;i<size_;++i)delete animals_[i];delete[] animals_;animals_=nullptr;size_=0;capacity_=0;}
