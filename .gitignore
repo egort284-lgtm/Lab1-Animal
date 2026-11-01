@@ -1,0 +1,6 @@
+*.exe
+animals.txt
+*.o
+*.obj
+.vscode/
+.idea/
